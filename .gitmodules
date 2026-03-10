@@ -1,0 +1,3 @@
+[submodule "frontend"]
+	path = frontend
+	url = git@github.com:vanloc19/frontend-chat-app.git
