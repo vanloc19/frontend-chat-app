@@ -3,8 +3,12 @@ import { useAuth } from '@/shared/hooks/useAuth/index.js'
 import { ROUTE_PATHS } from '@/routes/paths.js'
 
 function ProtectedRoute() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isLoading } = useAuth()
   const location = useLocation()
+
+  if (isLoading) {
+    return null
+  }
 
   if (!isAuthenticated) {
     return (

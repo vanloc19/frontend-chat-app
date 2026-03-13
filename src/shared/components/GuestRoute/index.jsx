@@ -4,7 +4,11 @@ import { ROUTE_PATHS } from '@/routes/paths.js'
 
 // Redirect authenticated users away from login/register back to home
 function GuestRoute() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isLoading } = useAuth()
+
+  if (isLoading) {
+    return null
+  }
 
   if (isAuthenticated) {
     return <Navigate to={ROUTE_PATHS.ROOT} replace />

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { authService } from '@/services/auth.service.js'
-import { setCookie } from '@/services/http.js'
+import { getDeviceInfo } from '@/services/device-info.js'
 import { ROUTE_PATHS } from '@/routes/paths.js'
 
 const STEP = Object.freeze({
@@ -98,16 +98,14 @@ function RegisterPage() {
     setError('')
 
     try {
-      const { data } = await authService.register({
+      await authService.register({
         phoneNumber: form.phoneNumber,
         otp: form.otp,
         displayName: form.displayName.trim(),
         password: form.password,
         gender: form.gender,
+        deviceInfo: getDeviceInfo(),
       })
-
-      setCookie('access_token', data.accessToken, 15 * 60)
-      setCookie('refresh_token', data.refreshToken, 7 * 24 * 3600)
       navigate(ROUTE_PATHS.ROOT, { replace: true })
     } catch (err) {
       setError(err.response?.data?.message || 'Đăng ký thất bại')

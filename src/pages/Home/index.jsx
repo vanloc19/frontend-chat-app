@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ROUTE_PATHS } from '@/routes/paths.js'
 import { authService } from '@/services/auth.service.js'
-import { getCookie, removeCookie } from '@/services/http.js'
 
 function HomePage() {
   const navigate = useNavigate()
@@ -12,15 +11,10 @@ function HomePage() {
     setIsLoggingOut(true)
 
     try {
-      const refreshToken = getCookie('refresh_token')
-      if (refreshToken) {
-        await authService.logout(refreshToken)
-      }
+      await authService.logout()
     } catch {
-      // Always clear local auth cookies even if server logout fails.
+      // Continue redirect flow even if server logout fails.
     } finally {
-      removeCookie('access_token')
-      removeCookie('refresh_token')
       navigate(`/${ROUTE_PATHS.AUTH.ROOT}/${ROUTE_PATHS.AUTH.LOGIN}`, { replace: true })
       setIsLoggingOut(false)
     }

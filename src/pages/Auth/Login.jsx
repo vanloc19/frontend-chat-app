@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { authService } from '@/services/auth.service.js'
-import { setCookie } from '@/services/http.js'
+import { getDeviceInfo } from '@/services/device-info.js'
 import { ROUTE_PATHS } from '@/routes/paths.js'
 
 function LoginPage() {
@@ -20,9 +20,10 @@ function LoginPage() {
     setLoading(true)
     setError('')
     try {
-      const { data } = await authService.login(form)
-      setCookie('access_token', data.accessToken, 15 * 60)
-      setCookie('refresh_token', data.refreshToken, 7 * 24 * 3600)
+      await authService.login({
+        ...form,
+        deviceInfo: getDeviceInfo(),
+      })
       navigate(ROUTE_PATHS.ROOT, { replace: true })
     } catch (err) {
       setError(err.response?.data?.message || 'Đăng nhập thất bại')
